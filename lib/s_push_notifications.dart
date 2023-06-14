@@ -177,4 +177,24 @@ class SPushNotify {
     // Cuando la aplicación está abierta, pero en segundo plano (minimizada).
     debugPrint("Handling a background message: ${message.messageId}");
   }
+
+  //! onTap Notify (Background & Terminated)
+  onTapNotify(void Function(RemoteMessage)? _function) async {
+    // Get any messages which caused the application to open from
+    // a terminated state.
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+
+    if (_function != null && initialMessage != null) {
+      _function(initialMessage);
+    }
+
+    // Also handle any interaction when the app is in the background via a
+    // Stream listener
+    FirebaseMessaging.onMessageOpenedApp.listen(
+      _function,
+      onError: (error) {},
+      onDone: () {},
+    );
+  }
 }
