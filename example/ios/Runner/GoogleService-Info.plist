@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>878343189971-27t4plvok4ba28jngjuan9voh7q7dub4.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.878343189971-27t4plvok4ba28jngjuan9voh7q7dub4</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBU8l1IEWQyzbaiZDDzB33TdAqgvYZkTS0</string>
+	<key>GCM_SENDER_ID</key>
+	<string>878343189971</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.sPushNotificationsExample</string>
+	<key>PROJECT_ID</key>
+	<string>push-notification-siltium</string>
+	<key>STORAGE_BUCKET</key>
+	<string>push-notification-siltium.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:878343189971:ios:1777d8fec2323ece576b26</string>
+</dict>
+</plist>
