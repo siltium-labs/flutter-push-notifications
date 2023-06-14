@@ -18,7 +18,6 @@ class SPushNotifications {
 class SPushNotify {
   static Future<void> _onBackgroundMessages(RemoteMessage message) async {
     // Cuando la aplicación está abierta, pero en segundo plano (minimizada).
-    // await Firebase.initializeApp();
     debugPrint("Handling a background message: ${message.messageId}");
   }
 
