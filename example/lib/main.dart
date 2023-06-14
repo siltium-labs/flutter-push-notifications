@@ -15,16 +15,12 @@ Future<void> main() async {
   await SPushNotify().initSPN(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
   // Request permissions for iOS
-  SPushNotify().permissionSPN();
+  // SPushNotify().permissionSPN();
 
   // Get device token
   final fcmToken = await SPushNotify().getTokenSPN();
   debugPrint("TOKEN: $fcmToken");
-
-  // Init for notifications
-  SPushNotify().initInfoSPN();
 
   runApp(const MyApp());
 }
@@ -41,7 +37,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Push Notifications - Siltium',
+      title: 'S-Push Notify - Siltium',
       theme: ThemeData.dark(),
       home: const HomePage(),
     );

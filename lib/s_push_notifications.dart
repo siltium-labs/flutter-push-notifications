@@ -16,21 +16,16 @@ class SPushNotifications {
 }
 
 class SPushNotify {
-  static Future<void> _onBackgroundMessages(RemoteMessage message) async {
-    // Cuando la aplicación está abierta, pero en segundo plano (minimizada).
-    debugPrint("Handling a background message: ${message.messageId}");
-  }
-
-  late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      FlutterLocalNotificationsPlugin();
-
+  //! Init FCM, getToken & Permissions
   initSPN({required FirebaseOptions options}) async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp(options: options);
-    await FirebaseMessaging.instance.getInitialMessage();
+    // Habilitar recibir notificaciones en fore, back y terminated
+    _onForegroundMessages();
     FirebaseMessaging.onBackgroundMessage(_onBackgroundMessages);
   }
 
+  // Para iOS
   permissionSPN() async {
     NotificationSettings settings =
         await FirebaseMessaging.instance.requestPermission(
@@ -57,87 +52,129 @@ class SPushNotify {
     return fcmToken;
   }
 
-  initInfoSPN() {
-    var androidInit =
-        const AndroidInitializationSettings("@mipmap/ic_launcher");
-    var iOSInit = const DarwinInitializationSettings();
-    var initSettings = InitializationSettings(
-      android: androidInit,
-      iOS: iOSInit,
-    );
-    flutterLocalNotificationsPlugin.initialize(
-      initSettings,
-      onDidReceiveNotificationResponse:
-          (NotificationResponse notificationResponse) {
-        try {
-          if (notificationResponse.payload != null &&
-              notificationResponse.payload!.isNotEmpty) {
-            debugPrint(notificationResponse.payload);
-          } else {
-            // else
-          }
-        } catch (e) {
-          // catch
-        }
-      },
-      onDidReceiveBackgroundNotificationResponse: _notificationTapBackground,
-    );
-    //
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      debugPrint("..........onMesagge..........");
-      debugPrint(
-          "onMessage: ${message.notification?.title}/${message.notification?.body}");
+  //! Foreground Notify 1
+  // late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  //     FlutterLocalNotificationsPlugin();
 
-      BigTextStyleInformation bigTextStyleInformation = BigTextStyleInformation(
-        message.notification!.body.toString(),
-        htmlFormatBigText: true,
-        contentTitle: message.notification!.title.toString(),
-        htmlFormatContentTitle: true,
-      );
-      AndroidNotificationDetails androidPlatformChannelSpecifics =
-          AndroidNotificationDetails(
-        'high_importance_channel',
-        'High Importance Notifications',
-        importance: Importance.high,
-        styleInformation: bigTextStyleInformation,
-        priority: Priority.high,
-        playSound: false,
-      );
-      NotificationDetails platformChannelSpecifics = NotificationDetails(
-        android: androidPlatformChannelSpecifics,
-        iOS: const DarwinNotificationDetails(),
-      );
-      await flutterLocalNotificationsPlugin.show(
-        0,
-        message.notification?.title,
-        message.notification?.body,
-        platformChannelSpecifics,
-        payload: message.data["body"],
-      );
+  // _onForegroundNotify() {
+  //   var androidInit =
+  //       const AndroidInitializationSettings("@mipmap/ic_launcher");
+  //   var iOSInit = const DarwinInitializationSettings();
+  //   var initSettings = InitializationSettings(
+  //     android: androidInit,
+  //     iOS: iOSInit,
+  //   );
+  //   flutterLocalNotificationsPlugin.initialize(
+  //     initSettings,
+  //     onDidReceiveNotificationResponse:
+  //         (NotificationResponse notificationResponse) {
+  //       try {
+  //         if (notificationResponse.payload != null &&
+  //             notificationResponse.payload!.isNotEmpty) {
+  //           debugPrint(notificationResponse.payload);
+  //         } else {
+  //           // else
+  //         }
+  //       } catch (e) {
+  //         // catch
+  //       }
+  //     },
+  //     onDidReceiveBackgroundNotificationResponse: _notificationTapBackground,
+  //   );
+  //   //
+  //   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+  //     debugPrint("..........onMesagge..........");
+  //     debugPrint(
+  //         "onMessage: ${message.notification?.title}/${message.notification?.body}");
+
+  //     BigTextStyleInformation bigTextStyleInformation = BigTextStyleInformation(
+  //       message.notification!.body.toString(),
+  //       htmlFormatBigText: true,
+  //       contentTitle: message.notification!.title.toString(),
+  //       htmlFormatContentTitle: true,
+  //     );
+  //     AndroidNotificationDetails androidPlatformChannelSpecifics =
+  //         AndroidNotificationDetails(
+  //       'high_importance_channel',
+  //       'High Importance Notifications',
+  //       importance: Importance.high,
+  //       styleInformation: bigTextStyleInformation,
+  //       priority: Priority.high,
+  //       playSound: false,
+  //     );
+  //     NotificationDetails platformChannelSpecifics = NotificationDetails(
+  //       android: androidPlatformChannelSpecifics,
+  //       iOS: const DarwinNotificationDetails(),
+  //     );
+  //     await flutterLocalNotificationsPlugin.show(
+  //       0,
+  //       message.notification?.title,
+  //       message.notification?.body,
+  //       platformChannelSpecifics,
+  //       payload: message.data["body"],
+  //     );
+  //   });
+  // }
+
+  // @pragma('vm:entry-point')
+  // static _notificationTapBackground(NotificationResponse notificationResponse) {
+  //   // ignore: avoid_print
+  //   print('notification(${notificationResponse.id}) action tapped: '
+  //       '${notificationResponse.actionId} with'
+  //       ' payload: ${notificationResponse.payload}');
+  //   if (notificationResponse.input?.isNotEmpty ?? false) {
+  //     // ignore: avoid_print
+  //     print(
+  //         'notification action tapped with input: ${notificationResponse.input}');
+  //   }
+  // }
+
+  //! Foreground Notify 2
+  _onForegroundMessages() async {
+    AndroidNotificationChannel channel = const AndroidNotificationChannel(
+      'high_importance_channel', // id del canal en AndroidManifest.xml
+      'High Importance Notifications',
+      description:
+          'This channel is used for important/foreground notifications.',
+      importance: Importance.max,
+    );
+
+    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        FlutterLocalNotificationsPlugin();
+
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(channel);
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+
+      // If `onMessage` is triggered with a notification, construct our own
+      // local notification to show to users using the created channel.
+      if (notification != null && android != null) {
+        flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          notification.title,
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              channelDescription: channel.description,
+              icon: android.smallIcon,
+            ),
+          ),
+        );
+      }
     });
   }
 
+  //! Background Notify
   @pragma('vm:entry-point')
-  static _notificationTapBackground(NotificationResponse notificationResponse) {
-    // ignore: avoid_print
-    print('notification(${notificationResponse.id}) action tapped: '
-        '${notificationResponse.actionId} with'
-        ' payload: ${notificationResponse.payload}');
-    if (notificationResponse.input?.isNotEmpty ?? false) {
-      // ignore: avoid_print
-      print(
-          'notification action tapped with input: ${notificationResponse.input}');
-    }
+  static Future<void> _onBackgroundMessages(RemoteMessage message) async {
+    // Cuando la aplicación está abierta, pero en segundo plano (minimizada).
+    debugPrint("Handling a background message: ${message.messageId}");
   }
-
-//----------------------------------------------------------------
-
-  // onForegroundMessages(Function? onForegroundNotify) {
-  //   // Cuando la aplicación está abierta, a la vista y en uso.
-  //   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-  //     debugPrint(
-  //         'Message: ${message.notification?.title ?? "New Notification"}');
-  //     onForegroundNotify;
-  //   });
-  // }
 }
