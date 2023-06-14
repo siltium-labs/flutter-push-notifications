@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "878343189971",
+    "project_id": "push-notification-siltium",
+    "storage_bucket": "push-notification-siltium.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:878343189971:android:2ca1a6319714fa3a576b26",
+        "android_client_info": {
+          "package_name": "com.example.s_push_notifications_example"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "878343189971-mj8giuermfovec99brt2rdia59841hps.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBn1Bg6wFHdIOdWn5qoCyPhNORpj2ZQWXw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "878343189971-mj8giuermfovec99brt2rdia59841hps.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
