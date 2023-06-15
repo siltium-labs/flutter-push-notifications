@@ -14,8 +14,8 @@ Future<void> main() async {
   // Init del plugin
   await SPushNotify().initSPN(
     options: DefaultFirebaseOptions.currentPlatform,
-    function: (payload) {
-      debugPrint("This is the payload: $payload");
+    function: (notify) {
+      debugPrint("This is the payload: ${notify?.payload}");
     },
   );
   // Request permissions for iOS

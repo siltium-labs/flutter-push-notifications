@@ -1,4 +1,6 @@
 //* Flutter imports
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 //* Packages imports
@@ -19,7 +21,7 @@ class SPushNotify {
   //! Init FCM, getToken & Permissions
   initSPN({
     required FirebaseOptions options,
-    required Function(String?) function,
+    required Function(NotificationResponse?) function,
   }) async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp(options: options);
@@ -54,41 +56,8 @@ class SPushNotify {
     return await FirebaseMessaging.instance.getToken();
   }
 
-  //   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-  //     debugPrint("..........onMesagge..........");
-  //     debugPrint(
-  //         "onMessage: ${message.notification?.title}/${message.notification?.body}");
-
-  //     BigTextStyleInformation bigTextStyleInformation = BigTextStyleInformation(
-  //       message.notification!.body.toString(),
-  //       htmlFormatBigText: true,
-  //       contentTitle: message.notification!.title.toString(),
-  //       htmlFormatContentTitle: true,
-  //     );
-  //     AndroidNotificationDetails androidPlatformChannelSpecifics =
-  //         AndroidNotificationDetails(
-  //       'high_importance_channel',
-  //       'High Importance Notifications',
-  //       importance: Importance.high,
-  //       styleInformation: bigTextStyleInformation,
-  //       priority: Priority.high,
-  //       playSound: false,
-  //     );
-  //     NotificationDetails platformChannelSpecifics = NotificationDetails(
-  //       android: androidPlatformChannelSpecifics,
-  //       iOS: const DarwinNotificationDetails(),
-  //     );
-  //     await flutterLocalNotificationsPlugin.show(
-  //       0,
-  //       message.notification?.title,
-  //       message.notification?.body,
-  //       platformChannelSpecifics,
-  //       payload: message.data["body"],
-  //     );
-  //   });
-
   //! Foreground Notify
-  _onForegroundMessages({required Function(String?) function}) async {
+  _onForegroundMessages({required Function(NotificationResponse?) function}) async {
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
 
@@ -98,6 +67,7 @@ class SPushNotify {
       description: 'This channel is used for foreground notifications.',
       importance: Importance.max,
     );
+
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
@@ -136,7 +106,7 @@ class SPushNotify {
     // onTap Foreground
     var androidInit =
         const AndroidInitializationSettings("@mipmap/ic_launcher");
-    var iOSInit = const IOSInitializationSettings();
+    var iOSInit = const DarwinInitializationSettings();
     var initSettings = InitializationSettings(
       android: androidInit,
       iOS: iOSInit,
@@ -144,19 +114,20 @@ class SPushNotify {
 
     await flutterLocalNotificationsPlugin.initialize(
       initSettings,
-      // onSelectNotification: (payload) {
-      //   try {
-      //     if (payload != null && payload.isNotEmpty) {
-      //       debugPrint("onTap foreground $payload"); // handle message
-      //     } else {
-      //       debugPrint("else");
-      //     }
-      //   } catch (e) {
-      //     debugPrint("error $e");
-      //   }
-      // },
-      onSelectNotification: (payload) {
-        function(payload);
+      onDidReceiveNotificationResponse:
+          (NotificationResponse notificationResponse) {
+        switch (notificationResponse.notificationResponseType) {
+          case NotificationResponseType.selectedNotification:
+            function(notificationResponse);
+            // selectNotificationStream.add(notificationResponse.payload);
+            // debugPrint("TAP ON FORE");
+            break;
+          case NotificationResponseType.selectedNotificationAction:
+            // if (notificationResponse.actionId == navigationActionId) {
+            //   selectNotificationStream.add(notificationResponse.payload);
+            // }
+            break;
+        }
       },
     );
 
@@ -164,29 +135,7 @@ class SPushNotify {
         flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>();
     await platform?.createNotificationChannel(channel);
-
-    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    //   RemoteNotification? notification = message.notification;
-    //   AndroidNotification? android = message.notification?.android;
-    //   if (notification != null && android != null) {
-    //     flutterLocalNotificationsPlugin.show(
-    //       notification.hashCode,
-    //       notification.title,
-    //       notification.body,
-    //       NotificationDetails(
-    //         android: AndroidNotificationDetails(
-    //           channel.id,
-    //           channel.name,
-    //           channelDescription: channel.description,
-    //           icon: android.smallIcon,
-    //         ),
-    //       ),
-    //     );
-    //   }
-    // });
   }
-
-  // Future initLocalNotifications({required Function(String?) function}) async {}
 
   //! Background Notify
   @pragma('vm:entry-point')
