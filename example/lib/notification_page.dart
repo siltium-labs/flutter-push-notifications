@@ -36,12 +36,6 @@ class _NotificationPageState extends State<NotificationPage> {
 
   // CONTROLLER --------------------------------------------------
   _navigate() {
-    // return Navigator.push(
-    //   context,
-    //   MaterialPageRoute(
-    //     builder: ((context) => const HomePage()),
-    //   ),
-    // );
     return Navigator.pop(context);
   }
 }

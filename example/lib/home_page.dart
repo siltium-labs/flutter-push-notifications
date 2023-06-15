@@ -1,6 +1,10 @@
 //* Flutter imports
 import 'package:flutter/material.dart';
+
+//* Plugin/Packages imports
 import 'package:s_push_notifications/s_push_notifications.dart';
+
+//* Project imports
 import 'package:s_push_notifications_example/notification_page.dart';
 
 class HomePage extends StatefulWidget {

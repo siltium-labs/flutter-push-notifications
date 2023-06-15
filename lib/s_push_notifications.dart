@@ -1,6 +1,7 @@
-//* Flutter imports
+//* Dart imports
 import 'dart:async';
 
+//* Flutter imports
 import 'package:flutter/material.dart';
 
 //* Packages imports
@@ -18,19 +19,20 @@ class SPushNotifications {
 }
 
 class SPushNotify {
-  //! Init FCM, getToken & Permissions
+  //INIT FCM, PERMISSIONS FOR IOS & GET DEVICE TOKEN FOR TEST
   initSPN({
     required FirebaseOptions options,
     required Function(NotificationResponse?) function,
   }) async {
+    // Init Firebase
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp(options: options);
-    // Habilitar recibir notificaciones en fore, back y terminated
+    // Init Notifications
     _onForegroundMessages(function: function);
     FirebaseMessaging.onBackgroundMessage(_onBackgroundMessages);
   }
 
-  // Para iOS
+  // For iOS
   permissionSPN() async {
     NotificationSettings settings =
         await FirebaseMessaging.instance.requestPermission(
@@ -52,11 +54,12 @@ class SPushNotify {
     }
   }
 
+  // For test with Firebase console
   Future<String?> getTokenSPN() async {
     return await FirebaseMessaging.instance.getToken();
   }
 
-  //! Foreground Notify
+  // FOREGROUND NOTIFICATION
   _onForegroundMessages({required Function(NotificationResponse?) function}) async {
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
@@ -77,8 +80,7 @@ class SPushNotify {
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
 
-      // If `onMessage` is triggered with a notification, construct our own
-      // local notification to show to users using the created channel.
+      // onReceive (Foreground)
       if (notification != null && android != null) {
         flutterLocalNotificationsPlugin.show(
           notification.hashCode,
@@ -103,7 +105,7 @@ class SPushNotify {
       sound: true,
     );
 
-    // onTap Foreground
+    // onTap (Foreground)
     var androidInit =
         const AndroidInitializationSettings("@mipmap/ic_launcher");
     var iOSInit = const DarwinInitializationSettings();
@@ -119,10 +121,9 @@ class SPushNotify {
         switch (notificationResponse.notificationResponseType) {
           case NotificationResponseType.selectedNotification:
             function(notificationResponse);
-            // selectNotificationStream.add(notificationResponse.payload);
-            // debugPrint("TAP ON FORE");
             break;
           case NotificationResponseType.selectedNotificationAction:
+            // todo
             // if (notificationResponse.actionId == navigationActionId) {
             //   selectNotificationStream.add(notificationResponse.payload);
             // }
@@ -137,26 +138,21 @@ class SPushNotify {
     await platform?.createNotificationChannel(channel);
   }
 
-  //! Background Notify
+  // BACKGROUND AND TERMINATED NOTIFICATION
+  // onReceive (Background & Terminated)
   @pragma('vm:entry-point')
   static Future<void> _onBackgroundMessages(RemoteMessage message) async {
-    // Cuando la aplicación está abierta, pero en segundo plano (minimizada).
     debugPrint("Handling a background message: ${message.messageId}");
   }
 
-  //! onTap Notify (Background & Terminated)
+  // onTap (Background & Terminated)
   onTapNotify(void Function(RemoteMessage)? function) async {
-    // Get any messages which caused the application to open from
-    // a terminated state.
     RemoteMessage? initialMessage =
         await FirebaseMessaging.instance.getInitialMessage();
 
     if (function != null && initialMessage != null) {
       function(initialMessage);
     }
-
-    // Also handle any interaction when the app is in the background via a
-    // Stream listener
     FirebaseMessaging.onMessageOpenedApp.listen(
       function,
       onError: (error) {},

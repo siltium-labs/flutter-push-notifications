@@ -10,18 +10,13 @@ import 'package:s_push_notifications_example/home_page.dart';
 //* Firebase Options import
 import 'firebase_options.dart';
 
-Future<void> main() async {
-  // Init del plugin
+void main() async {
   await SPushNotify().initSPN(
     options: DefaultFirebaseOptions.currentPlatform,
     function: (notify) {
-      debugPrint("This is the payload: ${notify?.payload}");
+      debugPrint("This is the payload: ${notify?.payload}...");
     },
   );
-  // Request permissions for iOS
-  // SPushNotify().permissionSPN();
-
-  // Get device token
   final fcmToken = await SPushNotify().getTokenSPN();
   debugPrint("TOKEN: $fcmToken");
 
