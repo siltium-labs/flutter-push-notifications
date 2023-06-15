@@ -17,11 +17,14 @@ class SPushNotifications {
 
 class SPushNotify {
   //! Init FCM, getToken & Permissions
-  initSPN({required FirebaseOptions options}) async {
+  initSPN({
+    required FirebaseOptions options,
+    required Function(String?) function,
+  }) async {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp(options: options);
     // Habilitar recibir notificaciones en fore, back y terminated
-    _onForegroundMessages();
+    _onForegroundMessages(function: function);
     FirebaseMessaging.onBackgroundMessage(_onBackgroundMessages);
   }
 
@@ -48,40 +51,9 @@ class SPushNotify {
   }
 
   Future<String?> getTokenSPN() async {
-    final fcmToken = await FirebaseMessaging.instance.getToken();
-    return fcmToken;
+    return await FirebaseMessaging.instance.getToken();
   }
 
-  //! Foreground Notify 1
-  // late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  //     FlutterLocalNotificationsPlugin();
-
-  // _onForegroundNotify() {
-  //   var androidInit =
-  //       const AndroidInitializationSettings("@mipmap/ic_launcher");
-  //   var iOSInit = const DarwinInitializationSettings();
-  //   var initSettings = InitializationSettings(
-  //     android: androidInit,
-  //     iOS: iOSInit,
-  //   );
-  //   flutterLocalNotificationsPlugin.initialize(
-  //     initSettings,
-  //     onDidReceiveNotificationResponse:
-  //         (NotificationResponse notificationResponse) {
-  //       try {
-  //         if (notificationResponse.payload != null &&
-  //             notificationResponse.payload!.isNotEmpty) {
-  //           debugPrint(notificationResponse.payload);
-  //         } else {
-  //           // else
-  //         }
-  //       } catch (e) {
-  //         // catch
-  //       }
-  //     },
-  //     onDidReceiveBackgroundNotificationResponse: _notificationTapBackground,
-  //   );
-  //   //
   //   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
   //     debugPrint("..........onMesagge..........");
   //     debugPrint(
@@ -114,34 +86,18 @@ class SPushNotify {
   //       payload: message.data["body"],
   //     );
   //   });
-  // }
 
-  // @pragma('vm:entry-point')
-  // static _notificationTapBackground(NotificationResponse notificationResponse) {
-  //   // ignore: avoid_print
-  //   print('notification(${notificationResponse.id}) action tapped: '
-  //       '${notificationResponse.actionId} with'
-  //       ' payload: ${notificationResponse.payload}');
-  //   if (notificationResponse.input?.isNotEmpty ?? false) {
-  //     // ignore: avoid_print
-  //     print(
-  //         'notification action tapped with input: ${notificationResponse.input}');
-  //   }
-  // }
-
-  //! Foreground Notify 2
-  _onForegroundMessages() async {
-    AndroidNotificationChannel channel = const AndroidNotificationChannel(
-      'high_importance_channel', // id del canal en AndroidManifest.xml
-      'High Importance Notifications',
-      description:
-          'This channel is used for important/foreground notifications.',
-      importance: Importance.max,
-    );
-
+  //! Foreground Notify
+  _onForegroundMessages({required Function(String?) function}) async {
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
 
+    AndroidNotificationChannel channel = const AndroidNotificationChannel(
+      'high_importance_channel', // id del canal en AndroidManifest.xml
+      'High Importance Notifications',
+      description: 'This channel is used for foreground notifications.',
+      importance: Importance.max,
+    );
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
@@ -169,7 +125,68 @@ class SPushNotify {
         );
       }
     });
+
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    // onTap Foreground
+    var androidInit =
+        const AndroidInitializationSettings("@mipmap/ic_launcher");
+    var iOSInit = const IOSInitializationSettings();
+    var initSettings = InitializationSettings(
+      android: androidInit,
+      iOS: iOSInit,
+    );
+
+    await flutterLocalNotificationsPlugin.initialize(
+      initSettings,
+      // onSelectNotification: (payload) {
+      //   try {
+      //     if (payload != null && payload.isNotEmpty) {
+      //       debugPrint("onTap foreground $payload"); // handle message
+      //     } else {
+      //       debugPrint("else");
+      //     }
+      //   } catch (e) {
+      //     debugPrint("error $e");
+      //   }
+      // },
+      onSelectNotification: (payload) {
+        function(payload);
+      },
+    );
+
+    final platform =
+        flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
+    await platform?.createNotificationChannel(channel);
+
+    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    //   RemoteNotification? notification = message.notification;
+    //   AndroidNotification? android = message.notification?.android;
+    //   if (notification != null && android != null) {
+    //     flutterLocalNotificationsPlugin.show(
+    //       notification.hashCode,
+    //       notification.title,
+    //       notification.body,
+    //       NotificationDetails(
+    //         android: AndroidNotificationDetails(
+    //           channel.id,
+    //           channel.name,
+    //           channelDescription: channel.description,
+    //           icon: android.smallIcon,
+    //         ),
+    //       ),
+    //     );
+    //   }
+    // });
   }
+
+  // Future initLocalNotifications({required Function(String?) function}) async {}
 
   //! Background Notify
   @pragma('vm:entry-point')
@@ -179,20 +196,20 @@ class SPushNotify {
   }
 
   //! onTap Notify (Background & Terminated)
-  onTapNotify(void Function(RemoteMessage)? _function) async {
+  onTapNotify(void Function(RemoteMessage)? function) async {
     // Get any messages which caused the application to open from
     // a terminated state.
     RemoteMessage? initialMessage =
         await FirebaseMessaging.instance.getInitialMessage();
 
-    if (_function != null && initialMessage != null) {
-      _function(initialMessage);
+    if (function != null && initialMessage != null) {
+      function(initialMessage);
     }
 
     // Also handle any interaction when the app is in the background via a
     // Stream listener
     FirebaseMessaging.onMessageOpenedApp.listen(
-      _function,
+      function,
       onError: (error) {},
       onDone: () {},
     );
