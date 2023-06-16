@@ -60,7 +60,8 @@ class SPushNotify {
   }
 
   // FOREGROUND NOTIFICATION
-  _onForegroundMessages({required Function(NotificationResponse?) function}) async {
+  _onForegroundMessages(
+      {required Function(NotificationResponse?) function}) async {
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
 
@@ -69,6 +70,8 @@ class SPushNotify {
       'High Importance Notifications',
       description: 'This channel is used for foreground notifications.',
       importance: Importance.max,
+      // "Importance.max" muestra la notificacion en pantalla y vibra.
+      // "Importance.defaultImportance" solo vibra y deja una notificacion en la barra de arriba sin mostrarla en pantalla.
     );
 
     await flutterLocalNotificationsPlugin
@@ -158,5 +161,9 @@ class SPushNotify {
       onError: (error) {},
       onDone: () {},
     );
+  }
+
+  onTapForeNotify() {
+    //
   }
 }
