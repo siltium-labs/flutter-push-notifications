@@ -69,7 +69,8 @@ class _HomePageState extends State<HomePage> {
         debugPrint("Body: ${message.notification?.body}");
         debugPrint("Payload: ${message.data}");
         debugPrint("----------------------------------------------");
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Notify: ${message.notification?.title}")));
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Notify: ${message.notification?.title}")));
       },
     );
   }
