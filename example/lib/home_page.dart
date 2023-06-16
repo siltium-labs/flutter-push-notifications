@@ -47,7 +47,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    SPushNotify().onTapNotify((message) => _navigate());
+    _onBackgroundNotify();
+    _onForegroundNotify();
   }
 
   _navigate() {
@@ -57,5 +58,14 @@ class _HomePageState extends State<HomePage> {
         builder: ((context) => const NotificationPage()),
       ),
     );
+  }
+
+  _onForegroundNotify() async {
+    await SPushNotify()
+        .onTapForegroundNotify(function: (notify) => _navigate());
+  }
+
+  _onBackgroundNotify() async {
+    await SPushNotify().onTapBackgroundNotify((message) => _navigate());
   }
 }

@@ -11,13 +11,9 @@ import 'package:s_push_notifications_example/home_page.dart';
 import 'firebase_options.dart';
 
 void main() async {
-  await SPushNotify().initSPN(
-    options: DefaultFirebaseOptions.currentPlatform,
-    function: (notify) {
-      debugPrint("This is the payload: ${notify?.payload}...");
-    },
-  );
-  final fcmToken = await SPushNotify().getTokenSPN();
+  await SPushNotify().init(options: DefaultFirebaseOptions.currentPlatform);
+  // await SPushNotify().requestPermission();
+  final fcmToken = await SPushNotify().getToken();
   debugPrint("TOKEN: $fcmToken");
 
   runApp(const MyApp());
