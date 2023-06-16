@@ -47,8 +47,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _onBackgroundNotify();
-    _onForegroundNotify();
+    _onReceiveForegroundNotify();
+    _onReceiveBackgroundNotify();
+    _onTapBackgroundNotify();
   }
 
   _navigate() {
@@ -60,20 +61,25 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _onForegroundNotify() async {
-    await SPushNotify().onTapForegroundNotify(
-      function: (notify) {
-        debugPrint("-----ONTAP FOREGROUND NOTIFY-----");
-        debugPrint("Id: ${notify?.id}");
-        debugPrint("ActionId: ${notify?.actionId}");
-        debugPrint("Payload: ${notify?.payload}");
+  _onReceiveForegroundNotify() async {
+    await SPushNotify().onForegroundNoify(
+      (message) {
+        debugPrint("-----RECEIVE FOREGROUND NOTIFY-----");
+        debugPrint("Title: ${message.notification?.title}");
+        debugPrint("Body: ${message.notification?.body}");
+        debugPrint("Payload: ${message.data}");
         debugPrint("----------------------------------------------");
-        _navigate();
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text("Notify: ${message.notification?.title}")));
       },
     );
   }
 
-  _onBackgroundNotify() async {
+  _onReceiveBackgroundNotify() async {
+    await SPushNotify().onBackgroundNotify(_onBackgroundMessage);
+  }
+
+  _onTapBackgroundNotify() async {
     await SPushNotify().onTapBackgroundNotify(
       (message) {
         debugPrint("-----ONTAP BACKGROUND/TERMINATED NOTIFY-----");
@@ -86,6 +92,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  // _onReceiveBackgroundNotify() {}
-  // _onReceiveForegroundNotify() {}
+  @pragma('vm:entry-point')
+  static Future<void> _onBackgroundMessage(message) async {
+    debugPrint("-----RECEIVE BACKGROUND/TERMINATED NOTIFY-----");
+    debugPrint("Title: ${message.notification?.title}");
+    debugPrint("Body: ${message.notification?.body}");
+    debugPrint("Payload: ${message.data}");
+    debugPrint("----------------------------------------------");
+  }
 }
