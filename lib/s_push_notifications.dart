@@ -1,3 +1,6 @@
+//* Dart imports
+import 'dart:async';
+
 //* Flutter imports
 import 'package:flutter/material.dart';
 
@@ -16,17 +19,32 @@ class SPushNotifications {
 }
 
 class SPushNotify {
-  //! Init FCM, getToken & Permissions
-  initSPN({required FirebaseOptions options}) async {
+  //* VARIABLES
+  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  final AndroidNotificationChannel _andoridChannel =
+      const AndroidNotificationChannel(
+    'high_importance_channel', // id del canal en AndroidManifest.xml
+    'High Importance Notifications',
+    description: 'This channel is used for foreground notifications.',
+    importance: Importance.max,
+    // "Importance.max" muestra la notificacion en pantalla y vibra.
+    // "Importance.defaultImportance" solo vibra y deja una notificacion en la barra de arriba sin mostrarla en pantalla.
+  );
+
+  //* INIT FCM, PERMISSIONS FOR IOS & GET DEVICE TOKEN FOR TEST
+  init({required FirebaseOptions options}) async {
+    // Init Firebase
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp(options: options);
-    // Habilitar recibir notificaciones en fore, back y terminated
+    // Init Notifications
     _onForegroundMessages();
     FirebaseMessaging.onBackgroundMessage(_onBackgroundMessages);
   }
 
-  // Para iOS
-  permissionSPN() async {
+  // For iOS
+  requestPermission() async {
     NotificationSettings settings =
         await FirebaseMessaging.instance.requestPermission(
       alert: true,
@@ -47,134 +65,120 @@ class SPushNotify {
     }
   }
 
-  Future<String?> getTokenSPN() async {
-    final fcmToken = await FirebaseMessaging.instance.getToken();
-    return fcmToken;
+  // For test with Firebase console
+  Future<String?> getToken() async {
+    return await FirebaseMessaging.instance.getToken();
   }
 
-  //! Foreground Notify 1
-  // late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-  //     FlutterLocalNotificationsPlugin();
-
-  // _onForegroundNotify() {
-  //   var androidInit =
-  //       const AndroidInitializationSettings("@mipmap/ic_launcher");
-  //   var iOSInit = const DarwinInitializationSettings();
-  //   var initSettings = InitializationSettings(
-  //     android: androidInit,
-  //     iOS: iOSInit,
-  //   );
-  //   flutterLocalNotificationsPlugin.initialize(
-  //     initSettings,
-  //     onDidReceiveNotificationResponse:
-  //         (NotificationResponse notificationResponse) {
-  //       try {
-  //         if (notificationResponse.payload != null &&
-  //             notificationResponse.payload!.isNotEmpty) {
-  //           debugPrint(notificationResponse.payload);
-  //         } else {
-  //           // else
-  //         }
-  //       } catch (e) {
-  //         // catch
-  //       }
-  //     },
-  //     onDidReceiveBackgroundNotificationResponse: _notificationTapBackground,
-  //   );
-  //   //
-  //   FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-  //     debugPrint("..........onMesagge..........");
-  //     debugPrint(
-  //         "onMessage: ${message.notification?.title}/${message.notification?.body}");
-
-  //     BigTextStyleInformation bigTextStyleInformation = BigTextStyleInformation(
-  //       message.notification!.body.toString(),
-  //       htmlFormatBigText: true,
-  //       contentTitle: message.notification!.title.toString(),
-  //       htmlFormatContentTitle: true,
-  //     );
-  //     AndroidNotificationDetails androidPlatformChannelSpecifics =
-  //         AndroidNotificationDetails(
-  //       'high_importance_channel',
-  //       'High Importance Notifications',
-  //       importance: Importance.high,
-  //       styleInformation: bigTextStyleInformation,
-  //       priority: Priority.high,
-  //       playSound: false,
-  //     );
-  //     NotificationDetails platformChannelSpecifics = NotificationDetails(
-  //       android: androidPlatformChannelSpecifics,
-  //       iOS: const DarwinNotificationDetails(),
-  //     );
-  //     await flutterLocalNotificationsPlugin.show(
-  //       0,
-  //       message.notification?.title,
-  //       message.notification?.body,
-  //       platformChannelSpecifics,
-  //       payload: message.data["body"],
-  //     );
-  //   });
-  // }
-
-  // @pragma('vm:entry-point')
-  // static _notificationTapBackground(NotificationResponse notificationResponse) {
-  //   // ignore: avoid_print
-  //   print('notification(${notificationResponse.id}) action tapped: '
-  //       '${notificationResponse.actionId} with'
-  //       ' payload: ${notificationResponse.payload}');
-  //   if (notificationResponse.input?.isNotEmpty ?? false) {
-  //     // ignore: avoid_print
-  //     print(
-  //         'notification action tapped with input: ${notificationResponse.input}');
-  //   }
-  // }
-
-  //! Foreground Notify 2
+  //* FOREGROUND NOTIFICATION
   _onForegroundMessages() async {
-    AndroidNotificationChannel channel = const AndroidNotificationChannel(
-      'high_importance_channel', // id del canal en AndroidManifest.xml
-      'High Importance Notifications',
-      description:
-          'This channel is used for important/foreground notifications.',
-      importance: Importance.max,
-    );
-
-    final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
-
-    await flutterLocalNotificationsPlugin
+    await _flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(channel);
+        ?.createNotificationChannel(_andoridChannel);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
+      String? newPayload = message.data.toString();
 
-      // If `onMessage` is triggered with a notification, construct our own
-      // local notification to show to users using the created channel.
+      // TODO: OnReceiveForegroundNotify
+      // DEBUG: REMOVE
+      debugPrint("-----RECEIVE FOREGROUND NOTIFY-----");
+      debugPrint("Title: ${message.notification?.title}");
+      debugPrint("Body: ${message.notification?.body}");
+      debugPrint("Payload: ${message.data}");
+      debugPrint("----------------------------------------------");
+
+      // onReceive (Foreground)
       if (notification != null && android != null) {
-        flutterLocalNotificationsPlugin.show(
+        _flutterLocalNotificationsPlugin.show(
           notification.hashCode,
           notification.title,
           notification.body,
+          payload: newPayload,
           NotificationDetails(
             android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              channelDescription: channel.description,
+              _andoridChannel.id,
+              _andoridChannel.name,
+              channelDescription: _andoridChannel.description,
               icon: android.smallIcon,
             ),
           ),
         );
       }
     });
+
+    // For iOS Foreground Notifications
+    await FirebaseMessaging.instance
+        .setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
   }
 
-  //! Background Notify
+  // onTap (Foreground) -> Se llama en el HomePage de la app para manejar las notificaciones
+  onTapForegroundNotify({
+    required Function(NotificationResponse?) function,
+  }) async {
+    var androidInit =
+        const AndroidInitializationSettings("@mipmap/ic_launcher");
+    var iOSInit = const DarwinInitializationSettings();
+    var initSettings = InitializationSettings(
+      android: androidInit,
+      iOS: iOSInit,
+    );
+
+    await _flutterLocalNotificationsPlugin.initialize(
+      initSettings,
+      onDidReceiveNotificationResponse: (notificationResponse) {
+        switch (notificationResponse.notificationResponseType) {
+          case NotificationResponseType.selectedNotification:
+            function(notificationResponse);
+            break;
+          default:
+            break;
+          // case NotificationResponseType.selectedNotificationAction:
+          //   if (notificationResponse.actionId == navigationActionId) {
+          //     selectNotificationStream.add(notificationResponse.payload);
+          //   }
+          //   break;
+        }
+      },
+    );
+
+    final platform =
+        _flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
+    await platform?.createNotificationChannel(_andoridChannel);
+  }
+
+  //* BACKGROUND AND TERMINATED NOTIFICATION
+  // onReceive (Background & Terminated)
   @pragma('vm:entry-point')
   static Future<void> _onBackgroundMessages(RemoteMessage message) async {
-    // Cuando la aplicación está abierta, pero en segundo plano (minimizada).
-    debugPrint("Handling a background message: ${message.messageId}");
+    // TODO: OnReceiveBackgroundNotify
+    // DEBUG: REMOVE
+    debugPrint("-----RECEIVE BACKGROUND/TERMINATED NOTIFY-----");
+    debugPrint("Title: ${message.notification?.title}");
+    debugPrint("Body: ${message.notification?.body}");
+    debugPrint("Payload: ${message.data}");
+    debugPrint("----------------------------------------------");
+  }
+
+  // onTap (Background & Terminated) -> Se llama en el HomePage de la app para manejar las notificaciones
+  onTapBackgroundNotify(void Function(RemoteMessage)? function) async {
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+
+    if (function != null && initialMessage != null) {
+      function(initialMessage);
+    }
+    FirebaseMessaging.onMessageOpenedApp.listen(
+      function,
+      onError: (error) {},
+      onDone: () {},
+    );
   }
 }

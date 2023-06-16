@@ -12,7 +12,7 @@ EN FLUTTER:
 
 1) importar la librería
 
-2) build.gradle minsdk 19
+2) build.gradle minsdk 19 y en IOS agregar el meta dato ...
 
 3) inicializar la librería
 

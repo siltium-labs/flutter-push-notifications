@@ -1,5 +1,10 @@
 //* Flutter imports
 import 'package:flutter/material.dart';
+
+//* Plugin/Packages imports
+import 'package:s_push_notifications/s_push_notifications.dart';
+
+//* Project imports
 import 'package:s_push_notifications_example/notification_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -10,11 +15,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,6 +44,13 @@ class _HomePageState extends State<HomePage> {
   }
 
   // CONTROLLER --------------------------------------------------
+  @override
+  void initState() {
+    super.initState();
+    _onBackgroundNotify();
+    _onForegroundNotify();
+  }
+
   _navigate() {
     return Navigator.push(
       context,
@@ -52,4 +59,33 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  _onForegroundNotify() async {
+    await SPushNotify().onTapForegroundNotify(
+      function: (notify) {
+        debugPrint("-----ONTAP FOREGROUND NOTIFY-----");
+        debugPrint("Id: ${notify?.id}");
+        debugPrint("ActionId: ${notify?.actionId}");
+        debugPrint("Payload: ${notify?.payload}");
+        debugPrint("----------------------------------------------");
+        _navigate();
+      },
+    );
+  }
+
+  _onBackgroundNotify() async {
+    await SPushNotify().onTapBackgroundNotify(
+      (message) {
+        debugPrint("-----ONTAP BACKGROUND/TERMINATED NOTIFY-----");
+        debugPrint("Title: ${message.notification?.title}");
+        debugPrint("Body: ${message.notification?.body}");
+        debugPrint("Payload: ${message.data}");
+        debugPrint("----------------------------------------------");
+        _navigate();
+      },
+    );
+  }
+
+  // _onReceiveBackgroundNotify() {}
+  // _onReceiveForegroundNotify() {}
 }
