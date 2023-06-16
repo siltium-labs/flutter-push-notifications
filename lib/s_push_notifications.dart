@@ -20,10 +20,11 @@ class SPushNotifications {
 
 class SPushNotify {
   //* VARIABLES
-  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  AndroidNotificationChannel channel = const AndroidNotificationChannel(
+  final AndroidNotificationChannel _andoridChannel =
+      const AndroidNotificationChannel(
     'high_importance_channel', // id del canal en AndroidManifest.xml
     'High Importance Notifications',
     description: 'This channel is used for foreground notifications.',
@@ -71,26 +72,36 @@ class SPushNotify {
 
   //* FOREGROUND NOTIFICATION
   _onForegroundMessages() async {
-    await flutterLocalNotificationsPlugin
+    await _flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(channel);
+        ?.createNotificationChannel(_andoridChannel);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
+      String? newPayload = message.data.toString();
+
+      // TODO: OnReceiveForegroundNotify
+      // DEBUG: REMOVE
+      debugPrint("-----RECEIVE FOREGROUND NOTIFY-----");
+      debugPrint("Title: ${message.notification?.title}");
+      debugPrint("Body: ${message.notification?.body}");
+      debugPrint("Payload: ${message.data}");
+      debugPrint("----------------------------------------------");
 
       // onReceive (Foreground)
       if (notification != null && android != null) {
-        flutterLocalNotificationsPlugin.show(
+        _flutterLocalNotificationsPlugin.show(
           notification.hashCode,
           notification.title,
           notification.body,
+          payload: newPayload,
           NotificationDetails(
             android: AndroidNotificationDetails(
-              channel.id,
-              channel.name,
-              channelDescription: channel.description,
+              _andoridChannel.id,
+              _andoridChannel.name,
+              channelDescription: _andoridChannel.description,
               icon: android.smallIcon,
             ),
           ),
@@ -98,6 +109,7 @@ class SPushNotify {
       }
     });
 
+    // For iOS Foreground Notifications
     await FirebaseMessaging.instance
         .setForegroundNotificationPresentationOptions(
       alert: true,
@@ -118,35 +130,41 @@ class SPushNotify {
       iOS: iOSInit,
     );
 
-    await flutterLocalNotificationsPlugin.initialize(
+    await _flutterLocalNotificationsPlugin.initialize(
       initSettings,
-      onDidReceiveNotificationResponse:
-          (NotificationResponse notificationResponse) {
+      onDidReceiveNotificationResponse: (notificationResponse) {
         switch (notificationResponse.notificationResponseType) {
           case NotificationResponseType.selectedNotification:
             function(notificationResponse);
             break;
-          case NotificationResponseType.selectedNotificationAction:
-            // todo
-            // if (notificationResponse.actionId == navigationActionId) {
-            //   selectNotificationStream.add(notificationResponse.payload);
-            // }
+          default:
             break;
+          // case NotificationResponseType.selectedNotificationAction:
+          //   if (notificationResponse.actionId == navigationActionId) {
+          //     selectNotificationStream.add(notificationResponse.payload);
+          //   }
+          //   break;
         }
       },
     );
 
     final platform =
-        flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+        _flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>();
-    await platform?.createNotificationChannel(channel);
+    await platform?.createNotificationChannel(_andoridChannel);
   }
 
   //* BACKGROUND AND TERMINATED NOTIFICATION
   // onReceive (Background & Terminated)
   @pragma('vm:entry-point')
   static Future<void> _onBackgroundMessages(RemoteMessage message) async {
-    debugPrint("Handling a background message: ${message.messageId}");
+    // TODO: OnReceiveBackgroundNotify
+    // DEBUG: REMOVE
+    debugPrint("-----RECEIVE BACKGROUND/TERMINATED NOTIFY-----");
+    debugPrint("Title: ${message.notification?.title}");
+    debugPrint("Body: ${message.notification?.body}");
+    debugPrint("Payload: ${message.data}");
+    debugPrint("----------------------------------------------");
   }
 
   // onTap (Background & Terminated) -> Se llama en el HomePage de la app para manejar las notificaciones
