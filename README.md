@@ -9,14 +9,14 @@ Plugin para incluir en proyectos mobile de Siltium que permite el uso de notific
 <br>
 
 ## **Versión**
-**0.1.0 - Version inicial** - Notificaciones Push para Android unicamente. Pendiente: Notificaciones Push para iOS (Apple).
+**0.1.0 - Versión inicial** - Notificaciones Push para Android únicamente. Pendiente: Notificaciones Push para iOS (Apple).
 <br>
 <br>
 
 ## **Instalación de la Librería (Android)**
 EN FLUTTER:
 
-1) Agregar la libreria en `pubspec.yaml`:
+1) Agregar la librería en `pubspec.yaml`:
 ```yaml
 dependencies:
   s_push_notify:
@@ -74,14 +74,14 @@ También puedes seguir la guía de la [Documentación oficial para Agregar Fireb
 
 ## **Inicialización de la Librería (Android)**
 Para agregar y utilizar en tu proyecto el plugin de notificaciones push, primero debes seguir estos pasos:
-1) Importar la librería `s_push_notifications` y el archivo `firebase_options.dart` (generado anteriormente con la intalación/configuración de Firebase) en el archivo main.dart de tu proyecto:
+1) Importar la librería `s_push_notifications` y el archivo `firebase_options.dart` (generado anteriormente con la intalación/configuración de Firebase) en el archivo `main.dart` de tu proyecto:
 ```dart
 // Package and Firebase options file import
 import 'package:s_push_notifications/s_push_notifications.dart';
 import 'firebase_options.dart';
 ```
 
-2) Inicializar la librería en main.dart con `SPushNotify().init()`, pasando al parámetro `options` un FirebaseOptions, que se encuentra en el archivo firebase_options.dart, como se muestra a continuación:
+2) Inicializar la librería en `main.dart` con `SPushNotify().init()`, pasando al parámetro `options` un FirebaseOptions, que se encuentra en el archivo `firebase_options.dart`, como se muestra a continuación:
 ```dart
 void main() async {
   await SPushNotify().init(options: DefaultFirebaseOptions.currentPlatform);
@@ -109,12 +109,12 @@ void main() async {
 Nota: Cada vez que se realice un `build` de la aplicación, devolverá un token diferente.
 
 2) Seguidamente en tu proyecto, en la pantalla que quieras agregar el manejo de notificaciones, llamar a las siguientes funciones según tu preferencia:
-- SPushNotify().onForegroundNoify() -> Para manejar las notificaciones push cuando se reciben, mientras la app esta abierta o en primer plano (Foreground App).
-- SPushNotify().onBackgroundNotify() -> Para manejar las notificaciones push cuando se reciben, mientras la app esta cerrada o en segundo plano (Terminated y Background App).
-- SPushNotify().onTapBackgroundNotify() -> Para manejar las notificaciones push al ser presionadas o seleccionadas desde la barra de notificaciones, mientras la app esta cerrada o en segundo plano (Terminated y Background App).
+- `SPushNotify().onForegroundNoify()` -> Para manejar las notificaciones push cuando se reciben, mientras la app esta abierta o en primer plano (Foreground App).
+- `SPushNotify().onBackgroundNotify()` -> Para manejar las notificaciones push cuando se reciben, mientras la app esta cerrada o en segundo plano (Terminated y Background App).
+- `SPushNotify().onTapBackgroundNotify()` -> Para manejar las notificaciones push al ser presionadas o seleccionadas desde la barra de notificaciones, mientras la app esta cerrada o en segundo plano (Terminated y Background App).
 
-IMPORTANTE:
-La función que se utilice en SPushNotify().onBackgroundNotify() para manejar las notificaciones, debe tener la siguiente estructura:
+IMPORTANTE:<br>
+La función que se utilice en `SPushNotify().onBackgroundNotify()` para manejar las notificaciones, debe tener la siguiente estructura:
 ```dart
 @override
   void initState() {
@@ -136,10 +136,11 @@ _onReceiveBackgroundNotify() async {
     // Tú código para manejo de Background Notifications;
   }
 ```
+<br>
 
 EN FIREBASE:
 
-3) Entrar en la [Consola de Firebase](https://firebase.google.com), en la pestaña "Participación" del menú lateral y alli elegir "Messaging". En esta parte vamos a poder mandar mensajes de prueba y campañas:
+3) Entrar en la [Consola de Firebase](https://firebase.google.com), en la pestaña "Participación" del menú lateral y allí elegir "Messaging". En esta parte vamos a poder mandar mensajes de prueba y campañas:
 
 ![Prueba push notifications firebase 1](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/usage_01.png)
 
@@ -147,7 +148,7 @@ EN FIREBASE:
 
 ![Prueba push notifications firebase 2](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/usage_02.png)
 
-5) En esta pantalla completar los datos que quieras enviar en la notificaion push de prueba, y luego en "Enviar mensaje de prueba" agregar el token del dispositivo obtenido anteriormente, para así enviar dicha prueba al dispositivo específico:
+5) En esta pantalla completar los datos que quieras enviar en la notificación push de prueba, y luego en "Enviar mensaje de prueba" agregar el token de tu dispositivo (obtenido anteriormente, en el paso 1). Entonces, al presionar "Probar" se enviará la notificación de prueba solamente al dispositivo cuyo token agregamos:
 
 ![Prueba push notifications firebase 3](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/usage_03.png)
 
