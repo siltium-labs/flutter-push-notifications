@@ -100,4 +100,13 @@ class _HomePageState extends State<HomePage> {
     debugPrint("Payload: ${message.data}");
     debugPrint("----------------------------------------------");
   }
+
+  subscribeToTopic() async {
+    String topic = "weather";
+    await SPushNotify().onSubscribeTopic(topic);
+  }
+
+  unsubscribeFromTopic() async {
+    await SPushNotify().onUnsubscribeTopic("weather");
+  }
 }

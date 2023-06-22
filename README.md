@@ -69,7 +69,7 @@ Nota: Si es la primera vez que usas Firebase con Flutter, realiza los pasos 1 y 
 
 También puedes seguir la guía de la [Documentación oficial para Agregar Firebase en una app de Flutter](https://firebase.google.com/docs/flutter/setup?hl=es-419&platform=android)<br>
 (Una vez terminada esta guía, también es necesario ir a NuevoProyectoFirebase -> Agregar app -> Flutter)
-
+<br>
 <br>
 
 ## **Inicialización de la Librería (Android)**
@@ -91,6 +91,8 @@ void main() async {
 Nota: No olvidar agregar el async al main().
 
 Ahora ya puedes usar el plugin y las diferentes funcionalidades que contiene.
+<br>
+<br>
 
 ## **Uso de la Librería**
 EN FLUTTER:
@@ -136,6 +138,23 @@ _onReceiveBackgroundNotify() async {
     // Tú código para manejo de Background Notifications;
   }
 ```
+
+Otros métodos:
+- `onSubscribeTopic` -> Para que la app cliente se pueda suscribir a cualquier tema existente o pueda crear un tema nuevo. Debe pasarse el nombre del tema (o topic) como un String.
+- `onUnsubscribeTopic` -> Para que la app cliente pueda anular la suscripción. Debe pasarse el nombre del tema (o topic) como un String.
+
+```dart
+subscribeToTopic() async {
+  String topic = "weather";
+  // Suscribirse a un tema
+  await SPushNotify().onSubscribeTopic(topic);
+}
+
+unsubscribeFromTopic() async {
+  // Anular suscripción a un tema
+  await SPushNotify().onUnsubscribeTopic("weather");
+}
+```
 <br>
 
 EN FIREBASE:
@@ -161,6 +180,7 @@ EN FIREBASE:
 ![Prueba push notifications firebase 6](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/usage_06.png)
 
 ![Prueba push notifications firebase 7](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/usage_07.png)
+<br>
 <br>
 
 ## **EJEMPLO**

@@ -86,4 +86,12 @@ class SPushNotify {
       onDone: () {},
     );
   }
+
+  onSubscribeTopic(String topic) async {
+    await FirebaseMessaging.instance.subscribeToTopic(topic);
+  }
+
+  onUnsubscribeTopic(String topic) async {
+    await FirebaseMessaging.instance.unsubscribeFromTopic(topic);
+  }
 }
