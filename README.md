@@ -203,7 +203,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Push Notifications'),
+        title: const Text('S-Push Notify - Siltium'),
         centerTitle: true,
       ),
       body: Column(
@@ -220,8 +220,25 @@ class _HomePageState extends State<HomePage> {
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () => _navigate(),
-            child: const Text("Navegar a Notification Page"),
-          )
+            child: const Text("Navegar a Notify"),
+          ),
+          const SizedBox(height: 20),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30),
+            child: Divider(
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () => _subscribeToTopic("Clima"),
+            child: const Text("Suscribir a \"Clima\""),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () => _unsubscribeFromTopic("Clima"),
+            child: const Text("Desuscribir de \"Clima\""),
+          ),
         ],
       ),
     );
@@ -247,7 +264,7 @@ class _HomePageState extends State<HomePage> {
 
   _onReceiveForegroundNotify() async {
     await SPushNotify().onForegroundNoify(
-      (message) {
+      onData: (message) {
         debugPrint("-----RECEIVE FOREGROUND NOTIFY-----");
         debugPrint("Title: ${message.notification?.title}");
         debugPrint("Body: ${message.notification?.body}");
@@ -256,22 +273,36 @@ class _HomePageState extends State<HomePage> {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Notify: ${message.notification?.title}")));
       },
+      onError: (error) {
+        // on error code
+      },
+      onDone: () {
+        // on done code
+      },
     );
   }
 
   _onReceiveBackgroundNotify() async {
-    await SPushNotify().onBackgroundNotify(_onBackgroundMessage);
+    await SPushNotify().onBackgroundNotify(onData: _onBackgroundMessage);
+    // ó también
+    // await SPushNotify().onBackgroundNotify(onData: (message) => _onBackgroundMessage(message));
   }
 
   _onTapBackgroundNotify() async {
     await SPushNotify().onTapBackgroundNotify(
-      (message) {
+      onData: (message) {
         debugPrint("-----ONTAP BACKGROUND/TERMINATED NOTIFY-----");
         debugPrint("Title: ${message.notification?.title}");
         debugPrint("Body: ${message.notification?.body}");
         debugPrint("Payload: ${message.data}");
         debugPrint("----------------------------------------------");
         _navigate();
+      },
+      onError: (error) {
+        // on error code
+      },
+      onDone: () {
+        // on done code
       },
     );
   }
@@ -284,5 +315,20 @@ class _HomePageState extends State<HomePage> {
     debugPrint("Payload: ${message.data}");
     debugPrint("----------------------------------------------");
   }
+
+  _subscribeToTopic(String topic) async {
+    await SPushNotify().onSubscribeTopic(topic);
+    _showSnackBar("Suscripto a \"$topic\".");
+  }
+
+  _unsubscribeFromTopic(String topic) async {
+    await SPushNotify().onUnsubscribeTopic(topic);
+    _showSnackBar("Suscripción a \"$topic\" anulada.");
+  }
+
+  _showSnackBar(String text) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
+  }
 }
+
 ```

@@ -47,12 +47,12 @@ class _HomePageState extends State<HomePage> {
           ),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () => subscribeToTopic("Clima"),
+            onPressed: () => _subscribeToTopic("Clima"),
             child: const Text("Suscribir a \"Clima\""),
           ),
           const SizedBox(height: 20),
           ElevatedButton(
-            onPressed: () => unsubscribeFromTopic("Clima"),
+            onPressed: () => _unsubscribeFromTopic("Clima"),
             child: const Text("Desuscribir de \"Clima\""),
           ),
         ],
@@ -80,7 +80,7 @@ class _HomePageState extends State<HomePage> {
 
   _onReceiveForegroundNotify() async {
     await SPushNotify().onForegroundNoify(
-      (message) {
+      onData: (message) {
         debugPrint("-----RECEIVE FOREGROUND NOTIFY-----");
         debugPrint("Title: ${message.notification?.title}");
         debugPrint("Body: ${message.notification?.body}");
@@ -89,22 +89,36 @@ class _HomePageState extends State<HomePage> {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Notify: ${message.notification?.title}")));
       },
+      onError: (error) {
+        // on error code
+      },
+      onDone: () {
+        // on done code
+      },
     );
   }
 
   _onReceiveBackgroundNotify() async {
-    await SPushNotify().onBackgroundNotify(_onBackgroundMessage);
+    await SPushNotify().onBackgroundNotify(onData: _onBackgroundMessage);
+    // o tambien
+    // await SPushNotify().onBackgroundNotify(onData: (message) => _onBackgroundMessage(message));
   }
 
   _onTapBackgroundNotify() async {
     await SPushNotify().onTapBackgroundNotify(
-      (message) {
+      onData: (message) {
         debugPrint("-----ONTAP BACKGROUND/TERMINATED NOTIFY-----");
         debugPrint("Title: ${message.notification?.title}");
         debugPrint("Body: ${message.notification?.body}");
         debugPrint("Payload: ${message.data}");
         debugPrint("----------------------------------------------");
         _navigate();
+      },
+      onError: (error) {
+        // on error code
+      },
+      onDone: () {
+        // on done code
       },
     );
   }
@@ -118,12 +132,12 @@ class _HomePageState extends State<HomePage> {
     debugPrint("----------------------------------------------");
   }
 
-  subscribeToTopic(String topic) async {
+  _subscribeToTopic(String topic) async {
     await SPushNotify().onSubscribeTopic(topic);
     _showSnackBar("Suscripto a \"$topic\".");
   }
 
-  unsubscribeFromTopic(String topic) async {
+  _unsubscribeFromTopic(String topic) async {
     await SPushNotify().onUnsubscribeTopic(topic);
     _showSnackBar("Suscripción a \"$topic\" anulada.");
   }

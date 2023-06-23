@@ -50,11 +50,17 @@ class SPushNotify {
   }
 
   //* FOREGROUND NOTIFICATION
-  onForegroundNoify(void Function(RemoteMessage)? function) async {
+  onForegroundNoify({
+    void Function(RemoteMessage)? onData,
+    Function? onError,
+    void Function()? onDone,
+    bool? cancelOnError,
+  }) async {
     FirebaseMessaging.onMessage.listen(
-      function,
-      onError: (error) {},
-      onDone: () {},
+      onData,
+      onError: (error) => onError,
+      onDone: () => onDone,
+      cancelOnError: cancelOnError,
     );
   }
 
@@ -62,28 +68,30 @@ class SPushNotify {
   //! El metodo que se use para "onBackgroundNotify" tiene que respetar este formato. README
   // @pragma('vm:entry-point')
   // static Future<void> _onBackgroundMessage(RemoteMessage message) async {
-  //   debugPrint("-----RECEIVE BACKGROUND/TERMINATED NOTIFY-----");
-  //   debugPrint("Title: ${message.notification?.title}");
-  //   debugPrint("Body: ${message.notification?.body}");
-  //   debugPrint("Payload: ${message.data}");
-  //   debugPrint("----------------------------------------------");
+  //   onBackground receive message code...
   // }
 
-  onBackgroundNotify(Future<void> Function(RemoteMessage) function) {
-    FirebaseMessaging.onBackgroundMessage(function);
+  onBackgroundNotify({required Future<void> Function(RemoteMessage) onData}) {
+    FirebaseMessaging.onBackgroundMessage(onData);
   }
 
-  onTapBackgroundNotify(void Function(RemoteMessage)? function) async {
+  onTapBackgroundNotify({
+    void Function(RemoteMessage)? onData,
+    Function? onError,
+    void Function()? onDone,
+    bool? cancelOnError,
+  }) async {
     RemoteMessage? initialMessage =
         await FirebaseMessaging.instance.getInitialMessage();
 
-    if (function != null && initialMessage != null) {
-      function(initialMessage);
+    if (onData != null && initialMessage != null) {
+      onData(initialMessage);
     }
     FirebaseMessaging.onMessageOpenedApp.listen(
-      function,
-      onError: (error) {},
-      onDone: () {},
+      onData,
+      onError: (error) => onError,
+      onDone: () => onDone,
+      cancelOnError: cancelOnError,
     );
   }
 
