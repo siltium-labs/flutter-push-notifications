@@ -37,7 +37,24 @@ class _HomePageState extends State<HomePage> {
           ElevatedButton(
             onPressed: () => _navigate(),
             child: const Text("Navegar a Notify"),
-          )
+          ),
+          const SizedBox(height: 20),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 30),
+            child: Divider(
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () => subscribeToTopic("Clima"),
+            child: const Text("Suscribir a \"Clima\""),
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () => unsubscribeFromTopic("Clima"),
+            child: const Text("Desuscribir de \"Clima\""),
+          ),
         ],
       ),
     );
@@ -101,12 +118,17 @@ class _HomePageState extends State<HomePage> {
     debugPrint("----------------------------------------------");
   }
 
-  subscribeToTopic() async {
-    String topic = "weather";
+  subscribeToTopic(String topic) async {
     await SPushNotify().onSubscribeTopic(topic);
+    _showSnackBar("Suscripto a \"$topic\".");
   }
 
-  unsubscribeFromTopic() async {
-    await SPushNotify().onUnsubscribeTopic("weather");
+  unsubscribeFromTopic(String topic) async {
+    await SPushNotify().onUnsubscribeTopic(topic);
+    _showSnackBar("Suscripción a \"$topic\" anulada.");
+  }
+
+  _showSnackBar(String text) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
   }
 }
