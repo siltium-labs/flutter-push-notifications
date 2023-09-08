@@ -19,9 +19,9 @@ EN FLUTTER:
 1) Agregar la librería en `pubspec.yaml`:
 ```yaml
 dependencies:
-  s_push_notify:
+  s_push_notifications:
     git:
-      url: https://github.com/YamiTeyssier/s-push-notify.git
+      url: https://github.com/siltium-labs/flutter-push-notifications.git
       ref: development
 ```
 Nota: Si se realizan cambios en la rama de dicho repositorio, es necesario quitar la librería (comentarla), correr el comando `flutter pub get`, volver a agregar la librería (descomentarla) y finalmente volver a correr el comando `flutter pub get`.
