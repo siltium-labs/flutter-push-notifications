@@ -15,6 +15,14 @@ class SPushNotifications {
 }
 
 class SPushNotify {
+  static final SPushNotify _instance = SPushNotify._constructor();
+
+  factory SPushNotify() {
+    return _instance;
+  }
+
+  SPushNotify._constructor();
+
   //* INIT FCM, PERMISSIONS FOR IOS & GET DEVICE TOKEN FOR TEST
   init({required FirebaseOptions options}) async {
     // Init Firebase
