@@ -142,6 +142,7 @@ _onReceiveBackgroundNotify() async {
 Otros métodos:
 - `onSubscribeTopic` -> Para que la app cliente se pueda suscribir a cualquier tema existente o pueda crear un tema nuevo. Debe pasarse el nombre del tema (o topic) como un String.
 - `onUnsubscribeTopic` -> Para que la app cliente pueda anular la suscripción. Debe pasarse el nombre del tema (o topic) como un String.
+- `deleteToken` -> Para que la app cliente no reciba notificaciones push (por ejemplo, si el usuario cierra sesión).
 
 ```dart
 subscribeToTopic() async {
@@ -153,6 +154,11 @@ subscribeToTopic() async {
 unsubscribeFromTopic() async {
   // Anular suscripción a un tema
   await SPushNotify().onUnsubscribeTopic("weather");
+}
+
+deleteAppToken() async {
+  // Eliminar token para dejar de recibir push notifications
+  await SPushNotify().deleteToken();
 }
 ```
 <br>
