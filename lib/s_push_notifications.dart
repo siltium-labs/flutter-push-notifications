@@ -8,6 +8,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 //* Project imports
 import 's_push_notifications_platform_interface.dart';
 
+//* Plugin exports
+export "package:firebase_messaging/firebase_messaging.dart";
+
 class SPushNotifications {
   Future<String?> getPlatformVersion() {
     return SPushNotificationsPlatform.instance.getPlatformVersion();
