@@ -9,3 +9,7 @@ Se agregó el método "deleteToken", el cual elimina el acceso a un token FCM pr
 ## 0.1.2
 Se actualizó el paquete firebase_core a la última versión (2.21.0) a la fecha (9/11/23).
 <br>Observación: iOS sigue en test.
+
+## 0.1.3
+Se actualizó el paquete firebase_messaging a la última versión (14.7.4) a la fecha (9/11/23).
+<br>Observación: iOS sigue en test.
