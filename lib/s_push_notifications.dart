@@ -1,3 +1,6 @@
+//* Dart imports
+import 'dart:io';
+
 //* Flutter imports
 import 'package:flutter/material.dart';
 
@@ -44,12 +47,14 @@ class SPushNotify {
       sound: true,
     );
 
-    await FirebaseMessaging.instance
-        .setForegroundNotificationPresentationOptions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+    if (Platform.isIOS) {
+      await FirebaseMessaging.instance
+          .setForegroundNotificationPresentationOptions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+    }
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       debugPrint('User granted permission on iOS');
