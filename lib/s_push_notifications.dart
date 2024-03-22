@@ -34,8 +34,8 @@ class SPushNotify {
     await Firebase.initializeApp(options: options);
   }
 
-  // For iOS
-  requestPermissionForIOS() async {
+  //? For iOS
+  requestPermission() async {
     NotificationSettings settings =
         await FirebaseMessaging.instance.requestPermission(
       alert: true,
@@ -47,6 +47,19 @@ class SPushNotify {
       sound: true,
     );
 
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      debugPrint('User granted permission on iOS');
+      await foregroundNotifyForIOS();
+    } else if (settings.authorizationStatus ==
+        AuthorizationStatus.provisional) {
+      debugPrint('User granted provisional permission on iOS');
+      await foregroundNotifyForIOS();
+    } else {
+      debugPrint('User declined or has not accepted permission on iOS');
+    }
+  }
+
+  foregroundNotifyForIOS() async {
     if (Platform.isIOS) {
       await FirebaseMessaging.instance
           .setForegroundNotificationPresentationOptions(
@@ -55,16 +68,8 @@ class SPushNotify {
         sound: true,
       );
     }
-
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      debugPrint('User granted permission on iOS');
-    } else if (settings.authorizationStatus ==
-        AuthorizationStatus.provisional) {
-      debugPrint('User granted provisional permission on iOS');
-    } else {
-      debugPrint('User declined or has not accepted permission on iOS');
-    }
   }
+  //?
 
   Future<String?> getToken() async {
     return await FirebaseMessaging.instance.getToken();
