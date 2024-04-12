@@ -1,15 +1,26 @@
 
 ------------------------------------------
-# **S-PushNotify: Siltium Component for Push Notifications**<br> ![](https://img.shields.io/badge/Dart-Flutter-blue) ![](https://img.shields.io/badge/Android-green) ![](https://img.shields.io/badge/pendiente-iOS-black) <br>
-
+# **S-PushNotify: Siltium Component for Push Notifications**<br>
+![](https://img.shields.io/badge/Flutter-3.10.6-blue)
+![](https://img.shields.io/badge/Android-green)
+![](https://img.shields.io/badge/pendiente-iOS-black)
+<br>
 
 ## **Descripción**
 Plugin para incluir en proyectos mobile de Siltium que permite el uso de notificaciones push, tanto en Foreground App como en Background y Terminate App.
 <br>
 <br>
 
-## **Versión**
-**0.1.0 - Versión inicial** - Notificaciones Push para Android únicamente. Pendiente: Notificaciones Push para iOS (Apple).
+## **Versión Actual de Flutter (para el Plugin)**
+**Flutter:** 3.10.6 <br>
+**Dart:** 3.0.6
+<br>
+<br>
+
+## **Versión Actual del Plugin**
+**0.1.4** - Notificaciones Push para Android únicamente. Pendiente: Notificaciones Push para iOS (Apple).
+
+Consultar archivo **CHANGELOG.md** para mas info de versiones.
 <br>
 <br>
 

@@ -1,4 +1,5 @@
-## 0.1.0 - Version inicial
+# Versiones de Development (branch)
+## 0.1.0 - Version inicial (código)
 Initial release: Push Notifications con Firebase disponibles para Android.
 <br>iOS en test.
 
@@ -17,3 +18,14 @@ Se actualizó el paquete firebase_messaging a la última versión (14.7.4) a la 
 ## 0.1.4
 Se retrocedió las versiones de los paquetes firebase_core y firebase_messaging a la anterior a los cambios en 0.1.2 y 0.1.3
 <br>Observación: iOS sigue en test.
+
+## 0.1.5
+Se agregó configuración para notificaiones push para iOS.
+<br>Observación: iOS en Testing.
+
+<br>
+<br>
+
+<!-- # Versiones de Tags
+## 1.0.0 - Release inicial (plugin para proyectos)
+Initial release: Push Notifications con Firebase disponibles para Android y iOS. -->

@@ -34,7 +34,7 @@ class SPushNotify {
     await Firebase.initializeApp(options: options);
   }
 
-  //? For iOS
+  //* For iOS & Android 13 or higher
   requestPermission() async {
     NotificationSettings settings =
         await FirebaseMessaging.instance.requestPermission(
@@ -48,18 +48,24 @@ class SPushNotify {
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      debugPrint('User granted permission on iOS');
-      await foregroundNotifyForIOS();
+      debugPrint(
+        'User granted permission on iOS/Android 13 or higher',
+      );
     } else if (settings.authorizationStatus ==
         AuthorizationStatus.provisional) {
-      debugPrint('User granted provisional permission on iOS');
-      await foregroundNotifyForIOS();
+      debugPrint(
+        'User granted provisional permission on iOS/Android 13 or higher',
+      );
     } else {
-      debugPrint('User declined or has not accepted permission on iOS');
+      debugPrint(
+        'User declined or has not accepted permission on iOS/Android 13 or higher',
+      );
     }
   }
+  //*
 
-  foregroundNotifyForIOS() async {
+  //? For iOS
+  activeForegroundNotifyForIOS() async {
     if (Platform.isIOS) {
       await FirebaseMessaging.instance
           .setForegroundNotificationPresentationOptions(
