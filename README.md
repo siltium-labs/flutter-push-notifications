@@ -67,7 +67,7 @@ Nota: En caso de no encontrarse las opciones mencionadas, agregar primero desde 
 ### **EN FIREBASE:**
 5) En Firebase, Ir a la [Consola Firebase](https://firebase.google.com) y crear un nuevo proyecto:
 
-![Crear nuevo proyecto firebase](hhttps://github.com/siltium-labs/flutter-push-notifications/blob/development/assets/readme_images/install_01.png)
+![Crear nuevo proyecto firebase](https://github.com/siltium-labs/flutter-push-notifications/blob/development/assets/readme_images/install_01.png)
 
 Colocarle nombre al nuevo proyecto y continuar:
 
