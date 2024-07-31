@@ -1,9 +1,10 @@
 
 ------------------------------------------
 # **S-PushNotify: Siltium Component for Push Notifications**<br>
+![](https://img.shields.io/badge/plugin%20version-1.0.0-red)
 ![](https://img.shields.io/badge/Flutter-3.10.6-blue)
 ![](https://img.shields.io/badge/Android-green)
-![](https://img.shields.io/badge/pendiente-iOS-black)
+![](https://img.shields.io/badge/iOS-black)
 <br>
 
 ## **Descripción**
@@ -18,13 +19,13 @@ Plugin para incluir en proyectos mobile de Siltium que permite el uso de notific
 <br>
 
 ## **Versión Actual del Plugin**
-**0.1.4** - Notificaciones Push para Android únicamente. Pendiente: Notificaciones Push para iOS (Apple).
+**1.0.0** - Notificaciones Push para Android y iOS
 
 Consultar archivo **CHANGELOG.md** para mas info de versiones.
 <br>
 <br>
 
-## **Instalación de la Librería (Android)**
+## **Instalación de la Librería**
 EN FLUTTER:
 
 1) Agregar la librería en `pubspec.yaml`:
@@ -72,7 +73,7 @@ Al habilitar Google Analytics es necesario configurarlo y aceptar las condicione
 ![Crear App de Flutter en Firebase](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/install_05.png)
 
 A continuación, seguir los pasos 1 y 2 de la documentación oficial que se muestran en pantalla.<br>
-Nota: Si es la primera vez que usas Firebase con Flutter, realiza los pasos 1 y 2 completos. Si ya lo usaste anteriormente, puedes realizar solo el paso 2 desde el comando `flutterfire configure`.<br>
+Nota: Si es la primera vez que usas Firebase con Flutter, realiza los pasos 1 y 2 completos. Si ya lo usaste anteriormente, realiza a partir del paso 2.<br>
 
 ![Paso 1](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/install_06.png)
 
@@ -83,7 +84,7 @@ También puedes seguir la guía de la [Documentación oficial para Agregar Fireb
 <br>
 <br>
 
-## **Inicialización de la Librería (Android)**
+## **Inicialización de la Librería**
 Para agregar y utilizar en tu proyecto el plugin de notificaciones push, primero debes seguir estos pasos:
 1) Importar la librería `s_push_notifications` y el archivo `firebase_options.dart` (generado anteriormente con la intalación/configuración de Firebase) en el archivo `main.dart` de tu proyecto:
 ```dart
@@ -106,7 +107,7 @@ Ahora ya puedes usar el plugin y las diferentes funcionalidades que contiene.
 <br>
 
 ## **Uso de la Librería**
-EN FLUTTER:
+### **EN FLUTTER:**
 
 1) Primero, para lograr hacer pruebas de envío de notificaciones push con Firebase, vamos a llamar a la función `SPushNotify().getToken()` para obtener el token del dispositivo y enviar dichas notificaciones al mismo:
 ```dart
@@ -122,6 +123,7 @@ void main() async {
 Nota: Cada vez que se realice un `build` de la aplicación, devolverá un token diferente.
 
 2) Seguidamente en tu proyecto, en la pantalla que quieras agregar el manejo de notificaciones, llamar a las siguientes funciones según tu preferencia:
+- `SPushNotify().requestPermission()` -> Para pedir los permisos correspondientes para mostrar las notificaciones push (Obligatorio para iOS y Android 13 o superior).
 - `SPushNotify().onForegroundNoify()` -> Para manejar las notificaciones push cuando se reciben, mientras la app esta abierta o en primer plano (Foreground App).
 - `SPushNotify().onBackgroundNotify()` -> Para manejar las notificaciones push cuando se reciben, mientras la app esta cerrada o en segundo plano (Terminated y Background App).
 - `SPushNotify().onTapBackgroundNotify()` -> Para manejar las notificaciones push al ser presionadas o seleccionadas desde la barra de notificaciones, mientras la app esta cerrada o en segundo plano (Terminated y Background App).
@@ -174,8 +176,7 @@ deleteAppToken() async {
 ```
 <br>
 
-EN FIREBASE:
-
+### **EN FIREBASE:**
 3) Entrar en la [Consola de Firebase](https://firebase.google.com), en la pestaña "Participación" del menú lateral y allí elegir "Messaging". En esta parte vamos a poder mandar mensajes de prueba y campañas:
 
 ![Prueba push notifications firebase 1](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/usage_01.png)
@@ -265,6 +266,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    _requestPermission();
     _onReceiveForegroundNotify();
     _onReceiveBackgroundNotify();
     _onTapBackgroundNotify();
@@ -277,6 +279,12 @@ class _HomePageState extends State<HomePage> {
         builder: ((context) => const NotificationPage()),
       ),
     );
+  }
+
+  _requestPermission() async {
+    // Por buenas practicas, no llamar a este método al inicio de la app.
+    // Llamarlo recién cuando se necesite mostrar las notificaciones push
+    await SPushNotify().requestPermission();
   }
 
   _onReceiveForegroundNotify() async {
