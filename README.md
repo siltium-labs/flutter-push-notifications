@@ -56,41 +56,41 @@ android {
 3) Para pruebas en iOS hay que tener una cuenta registrada en la appStore, para asi obtener y agregar los certificados que necesita Firebase para conectarse con los servicios de iOS:<br>
 FirebaseConsole > Configuración de proyecto > Cloud Messaging > Configuración de la app de Apple
 
-![Configurar proyecto firebase con claves apple](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/ios_01.png)
+![Configurar proyecto firebase con claves apple](https://github.com/siltium-labs/flutter-push-notifications/blob/development/assets/readme_images/ios_01.png)
 
 4) Luego, en el editor Xcode, abrir la carpeta `ios` del proyecto y entrar en el directorio `Runner` y archivo del mismo nombre. Habilitar las opciones de `Background fetch` y `Remote notifications`.
 
 Nota: En caso de no encontrarse las opciones mencionadas, agregar primero desde `Signing & Capabilities`  la opcion `Push Notifications`.
 
-![Configuración en xcode](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/ios_02.png)
+![Configuración en xcode](https://github.com/siltium-labs/flutter-push-notifications/blob/development/assets/readme_images/ios_02.png)
 
 ### **EN FIREBASE:**
 5) En Firebase, Ir a la [Consola Firebase](https://firebase.google.com) y crear un nuevo proyecto:
 
-![Crear nuevo proyecto firebase](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/install_01.png)
+![Crear nuevo proyecto firebase](hhttps://github.com/siltium-labs/flutter-push-notifications/blob/development/assets/readme_images/install_01.png)
 
 Colocarle nombre al nuevo proyecto y continuar:
 
-![Nombrar el nuevo proyecto firebase](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/install_02.png)
+![Nombrar el nuevo proyecto firebase](https://github.com/siltium-labs/flutter-push-notifications/blob/development/assets/readme_images/install_02.png)
 
 También puedes habilitar o deshabilitar Google Analytics. Si lo deshabilitas, seguidamente puedes crear el proyecto. Si no, continúa a la configuración del mismo:
 
-![Habilitar/Deshabilitar google analytics](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/install_03.png)
+![Habilitar/Deshabilitar google analytics](https://github.com/siltium-labs/flutter-push-notifications/blob/development/assets/readme_images/install_03.png)
 
 Al habilitar Google Analytics es necesario configurarlo y aceptar las condiciones de uso. Y finalmente, puedes crear el proyecto:
 
-![Finalizar y crear el proyecto](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/install_04.png)
+![Finalizar y crear el proyecto](https://github.com/siltium-labs/flutter-push-notifications/blob/development/assets/readme_images/install_04.png)
 
 6) Luego, añadir Firebase a tu aplicación: NuevoProyectoFirebase -> Agregar app -> Flutter<br>
 
-![Crear App de Flutter en Firebase](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/install_05.png)
+![Crear App de Flutter en Firebase](https://github.com/siltium-labs/flutter-push-notifications/blob/development/assets/readme_images/install_05.png)
 
 A continuación, seguir los pasos 1 y 2 de la documentación oficial que se muestran en pantalla.<br>
 Nota: Si es la primera vez que usas Firebase con Flutter, realiza los pasos 1 y 2 completos. Si ya lo usaste anteriormente, realiza a partir del paso 2.<br>
 
-![Paso 1](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/install_06.png)
+![Paso 1](https://github.com/siltium-labs/flutter-push-notifications/blob/development/assets/readme_images/install_06.png)
 
-![Paso 2](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/install_07.png)
+![Paso 2](https://github.com/siltium-labs/flutter-push-notifications/blob/development/assets/readme_images/install_07.png)
 
 También puedes seguir la guía de la [Documentación oficial para Agregar Firebase en una app de Flutter](https://firebase.google.com/docs/flutter/setup?hl=es-419&platform=android)<br>
 (Una vez terminada esta guía, también es necesario ir a NuevoProyectoFirebase -> Agregar app -> Flutter)
@@ -192,25 +192,25 @@ deleteAppToken() async {
 ### **EN FIREBASE:**
 3) Entrar en la [Consola de Firebase](https://firebase.google.com), en la pestaña "Participación" del menú lateral y allí elegir "Messaging". En esta parte vamos a poder mandar mensajes de prueba y campañas:
 
-![Prueba push notifications firebase 1](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/usage_01.png)
+![Prueba push notifications firebase 1](https://github.com/siltium-labs/flutter-push-notifications/blob/development/assets/readme_images/usage_01.png)
 
 4) Ir a "Campaña nueva":
 
-![Prueba push notifications firebase 2](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/usage_02.png)
+![Prueba push notifications firebase 2](https://github.com/siltium-labs/flutter-push-notifications/blob/development/assets/readme_images/usage_02.png)
 
 5) En esta pantalla completar los datos que quieras enviar en la notificación push de prueba, y luego en "Enviar mensaje de prueba" agregar el token de tu dispositivo (obtenido anteriormente, en el paso 1). Entonces, al presionar "Probar" se enviará la notificación de prueba solamente al dispositivo cuyo token agregamos:
 
-![Prueba push notifications firebase 3](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/usage_03.png)
+![Prueba push notifications firebase 3](https://github.com/siltium-labs/flutter-push-notifications/blob/development/assets/readme_images/usage_03.png)
 
-![Prueba push notifications firebase 4](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/usage_04.png)
+![Prueba push notifications firebase 4](https://github.com/siltium-labs/flutter-push-notifications/blob/development/assets/readme_images/usage_04.png)
 
 6) Una vez realizada la prueba y recibida la notificación push, ahora si podemos realizar una nueva campaña. Del mismo modo que el paso anterior, completamos los datos en la pantalla de "Campaña nueva" y al final de la misma hacemos click en "Revisar" y "Publicar":
 
-![Prueba push notifications firebase 5](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/usage_05.png)
+![Prueba push notifications firebase 5](https://github.com/siltium-labs/flutter-push-notifications/blob/development/assets/readme_images/usage_05.png)
 
-![Prueba push notifications firebase 6](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/usage_06.png)
+![Prueba push notifications firebase 6](https://github.com/siltium-labs/flutter-push-notifications/blob/development/assets/readme_images/usage_06.png)
 
-![Prueba push notifications firebase 7](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/usage_07.png)
+![Prueba push notifications firebase 7](https://github.com/siltium-labs/flutter-push-notifications/blob/development/assets/readme_images/usage_07.png)
 <br>
 <br>
 
