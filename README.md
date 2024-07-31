@@ -34,9 +34,12 @@ dependencies:
   s_push_notifications:
     git:
       url: https://github.com/siltium-labs/flutter-push-notifications.git
+      # ref a branch
       ref: development
+      # or ref a version tag
+      # ref: 1.0.0
 ```
-Nota: Si se realizan cambios en la rama de dicho repositorio, es necesario quitar la librería (comentarla), correr el comando `flutter pub get`, volver a agregar la librería (descomentarla) y finalmente volver a correr el comando `flutter pub get`.
+Nota: Si se referencia directamente a una rama de dicho repositorio (como development) y se realizan cambios en la misma, es necesario quitar la librería (comentarla), correr el comando `flutter pub get`, volver a agregar la librería (descomentarla) y finalmente volver a correr el comando `flutter pub get`.
 
 PARA ANDROID:
 
