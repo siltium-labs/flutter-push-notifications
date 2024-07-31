@@ -26,7 +26,7 @@ Consultar archivo **CHANGELOG.md** para mas info de versiones.
 <br>
 
 ## **Instalación de la Librería**
-EN FLUTTER:
+### **EN FLUTTER:**
 
 1) Agregar la librería en `pubspec.yaml`:
 ```yaml
@@ -41,8 +41,7 @@ dependencies:
 ```
 Nota: Si se referencia directamente a una rama de dicho repositorio (como development) y se realizan cambios en la misma, es necesario quitar la librería (comentarla), correr el comando `flutter pub get`, volver a agregar la librería (descomentarla) y finalmente volver a correr el comando `flutter pub get`.
 
-PARA ANDROID:
-
+### **PARA ANDROID:**
 2) Modificar el minSdkVersion a 19 en `project_name\android\app\build.gradle`:
 ```gradle
 android {
@@ -53,9 +52,20 @@ android {
 }
 ```
 
-EN FIREBASE:
+### **PARA iOS:**
+3) Para pruebas en iOS hay que tener una cuenta registrada en la appStore, para asi obtener y agregar los certificados que necesita Firebase para conectarse con los servicios de iOS:<br>
+FirebaseConsole > Configuración de proyecto > Cloud Messaging > Configuración de la app de Apple
 
-3) En Firebase, Ir a la [Consola Firebase](https://firebase.google.com) y crear un nuevo proyecto:
+![Configurar proyecto firebase con claves apple](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/ios_01.png)
+
+4) Luego, en el editor Xcode, abrir la carpeta `ios` del proyecto y entrar en el directorio `Runner` y archivo del mismo nombre. Habilitar las opciones de `Background fetch` y `Remote notifications`.
+
+Nota: En caso de no encontrarse las opciones mencionadas, agregar primero desde `Signing & Capabilities`  la opcion `Push Notifications`.
+
+![Configuración en xcode](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/ios_02.png)
+
+### **EN FIREBASE:**
+5) En Firebase, Ir a la [Consola Firebase](https://firebase.google.com) y crear un nuevo proyecto:
 
 ![Crear nuevo proyecto firebase](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/install_01.png)
 
@@ -71,7 +81,7 @@ Al habilitar Google Analytics es necesario configurarlo y aceptar las condicione
 
 ![Finalizar y crear el proyecto](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/install_04.png)
 
-4) Luego, añadir Firebase a tu aplicación: NuevoProyectoFirebase -> Agregar app -> Flutter<br>
+6) Luego, añadir Firebase a tu aplicación: NuevoProyectoFirebase -> Agregar app -> Flutter<br>
 
 ![Crear App de Flutter en Firebase](https://github.com/YamiTeyssier/s-push-notify/blob/development/assets/readme_images/install_05.png)
 
