@@ -13,7 +13,7 @@ Plugin para incluir en proyectos mobile de Siltium que permite el uso de notific
 <br>
 
 ## **Versión Actual de Flutter (para el Plugin)**
-**Flutter:** 3.10.6 <br>
+**Flutter:** 3.24.5 <br>
 **Dart:** 3.0.6
 <br>
 <br>
