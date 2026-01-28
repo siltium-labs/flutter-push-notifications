@@ -26,6 +26,9 @@ Se agregó configuración para notificaciones push para iOS.
 ## 1.0.0 - Release inicial
 Se testeó el plugin para iOS. Notificaciones Push disponible para ambas plataformas (Android y iOS).
 
+## 1.0.4
+Actualización a Flutter 3.38.4. Actualización de dependencias.
+
 <br>
 <br>
 
